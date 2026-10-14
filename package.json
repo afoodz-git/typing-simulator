@@ -1,0 +1,18 @@
+{
+  "name": "auto-typing",
+  "version": "1.0.0",
+  "description": "Hacker Typer Simulator for VS Code & Visual Studio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.21.2",
+    "uiohook-napi": "^1.5.5",
+    "ws": "^8.18.0"
+  }
+}

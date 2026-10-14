@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacker Typer Simulator</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #151e2e;
+      --border: #223049;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --primary: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title-area h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .badge-off { background: #1e293b; color: #94a3b8; border: 1px solid var(--border); }
+    .badge-on { background: #14532d; color: #4ade80; border: 1px solid #22c55e; animation: pulse 1.5s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.02); }
+    }
+
+    .shortcuts-bar {
+      display: flex;
+      gap: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      background: var(--card);
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .kbd {
+      background: #0b0f19;
+      border: 1px solid var(--primary);
+      color: #38bdf8;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .settings-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: var(--card);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .setting-item input[type="number"] {
+      width: 65px;
+      padding: 5px 8px;
+      background: #0b0f19;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 4px;
+      text-align: center;
+      outline: none;
+    }
+    .setting-item input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+
+    .editor-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    textarea {
+      flex: 1;
+      background: #070a12;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #38bdf8;
+      font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+      font-size: 0.95rem;
+      padding: 12px;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .progress-section {
+      background: var(--card);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #070a12;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.1s ease;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-hacker {
+      background: #0284c7;
+      color: white;
+    }
+    .btn-hacker:hover { background: #0369a1; }
+    .btn-hacker.active {
+      background: var(--success);
+    }
+
+    .btn-autoplay {
+      background: #7c3aed;
+      color: white;
+    }
+    .btn-autoplay:hover { background: #6d28d9; }
+    .btn-autoplay.active {
+      background: var(--warning);
+    }
+
+    .btn-reset {
+      background: #1e293b;
+      color: #e2e8f0;
+      flex: 0.35;
+      border: 1px solid var(--border);
+    }
+    .btn-reset:hover { background: #334155; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title-area">
+      <h1>⚡ Hacker Typer Simulator</h1>
+    </div>
+    <div>
+      <span id="modeBadge" class="badge badge-off">Mode: NONAKTIF</span>
+    </div>
+  </header>
+
+  <div class="shortcuts-bar">
+    <span>💡 <b>Global Hotkeys (bisa ditekan dari dalam VS Code):</b></span>
+    <span><span class="kbd">F8</span> Toggle Hacker Typer</span>
+    <span><span class="kbd">F9</span> Toggle Auto-Play</span>
+    <span><span class="kbd">F10</span> Reset</span>
+  </div>
+
+  <div class="settings-row">
+    <div class="setting-item">
+      <label>🎯 Tombol Pemicu Ngetik:</label>
+      <select id="triggerKey" style="padding: 5px 8px; background: #0b0f19; border: 1px solid var(--primary); color: #38bdf8; border-radius: 4px; font-weight: 600; outline: none;">
+        <option value="Space">Spasi (Spacebar)</option>
+        <option value="Tab">Tab</option>
+        <option value="ArrowRight">Panah Kanan (→)</option>
+        <option value="CtrlRight">Ctrl Kanan</option>
+        <option value="F7">Tombol F7</option>
+        <option value="Any">Semua Tombol (Bebas)</option>
+      </select>
+    </div>
+    <div class="setting-item">
+      <label>Karakter / ketukan:</label>
+      <input type="number" id="charsPerKey" value="3" min="1" max="50">
+    </div>
+    <div class="setting-item">
+      <label>Kecepatan Auto (ms):</label>
+      <input type="number" id="autoSpeed" value="50" min="5" max="1000">
+    </div>
+    <div class="setting-item">
+      <label>⏳ Jeda Timer:</label>
+      <input type="number" id="autoDelay" value="5" min="0" max="30" style="width: 50px;">
+      <span style="font-size: 0.8rem; color: var(--muted);">detik</span>
+    </div>
+    <div class="setting-item" style="margin-left: auto;">
+      <button id="loadPresetBtn" style="padding: 6px 12px; font-size: 0.8rem; background: #1e293b; border: 1px solid var(--border); color: #fff;">Muat Contoh Kode</button>
+    </div>
+  </div>
+
+  <div class="editor-section">
+    <div class="editor-header">
+      <span>Paste atau tulis kode yang ingin kamu simulasikan ketik di bawah:</span>
+      <span id="charCount">0 karakter</span>
+    </div>
+    <textarea id="codeInput" placeholder="// Masukkan kode kamu di sini..."></textarea>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-info">
+      <span id="progressText">Progress: 0 / 0 karakter (0%)</span>
+      <span id="statusHint" style="color: var(--muted);">Buka VS Code, letakkan kursor di file, lalu tekan <span class="kbd">F8</span></span>
+    </div>
+    <div class="progress-bar-bg">
+      <div id="progressBar" class="progress-bar-fill"></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="btnHacker" class="btn-hacker">
+      <span>⌨️ Aktifkan Hacker Mode [F8]</span>
+    </button>
+    <button id="btnAutoPlay" class="btn-autoplay">
+      <span>▶️ Mulai Auto-Play [F9]</span>
+    </button>
+    <button id="btnReset" class="btn-reset">
+      <span>🔄 Reset [F10]</span>
+    </button>
+  </div>
+
+  <script>
+    const codeInput = document.getElementById('codeInput');
+    const charCount = document.getElementById('charCount');
+    const charsPerKey = document.getElementById('charsPerKey');
+    const autoSpeed = document.getElementById('autoSpeed');
+    const loadPresetBtn = document.getElementById('loadPresetBtn');
+    
+    const modeBadge = document.getElementById('modeBadge');
+    const progressText = document.getElementById('progressText');
+    const progressBar = document.getElementById('progressBar');
+    const statusHint = document.getElementById('statusHint');
+
+    const btnHacker = document.getElementById('btnHacker');
+    const btnAutoPlay = document.getElementById('btnAutoPlay');
+    const btnReset = document.getElementById('btnReset');
+
+    let isHackerActive = false;
+    let isAutoPlaying = false;
+    let totalLength = 0;
+
+    const sampleCode = `import java.util.Scanner;
+
+public class Main {
+
+    // Variabel global
+    static final int KAPASITAS = 50;
+    static final int BIAYA_LAYANAN = 20000;
+    static Menu[] daftarMenu = new Menu[KAPASITAS];
+    static int jumlahMenu = 0;
+    static String[] kategoriList = {"Makanan", "Minuman"};
+    static Scanner input = new Scanner(System.in);
+
+    // Program utama
+    public static void main(String[] args) {
+        inisialisasiMenu();
+        int pilihan;
+
+        do {
+            System.out.println("\\n===== APLIKASI RESTORAN =====");
+            System.out.println("1. Menu Pelanggan (Pesan)");
+            System.out.println("2. Menu Pemilik (Kelola Menu)");
+            System.out.println("0. Keluar");
+
+            pilihan = bacaAngka("Pilih: ", 0, 2);
+
+            switch (pilihan) {
+                case 1:
+                    prosesPesanan();
+                    break;
+                case 2:
+                    menuPemilik();
+                    break;
+                case 0:
+                    System.out.println("Terima kasih!");
+                    break;
+            }
+        } while (pilihan != 0);
+    }
+
+    // Data menu awal
+    static void inisialisasiMenu() {
+        daftarMenu[0] = new Menu("Nasi Goreng", 25000, "Makanan");
+        daftarMenu[1] = new Menu("Mie Ayam", 20000, "Makanan");
+        daftarMenu[2] = new Menu("Soto Ayam", 22000, "Makanan");
+        daftarMenu[3] = new Menu("Ayam Bakar", 30000, "Makanan");
+        daftarMenu[4] = new Menu("Es Teh", 5000, "Minuman");
+        daftarMenu[5] = new Menu("Es Jeruk", 8000, "Minuman");
+        daftarMenu[6] = new Menu("Kopi Susu", 15000, "Minuman");
+        daftarMenu[7] = new Menu("Jus Alpukat", 18000, "Minuman");
+        jumlahMenu = 8;
+    }
+
+    // Memeriksa input angka
+    static boolean isAngka(String teks) {
+        if (teks.length() == 0 || teks.length() > 9) {
+            return false;
+        }
+
+        for (int i = 0; i < teks.length(); i++) {
+            char c = teks.charAt(i);
+
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Membaca angka sampai input valid
+    static int bacaAngka(String pesan, int min, int max) {
+        int hasil = 0;
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(pesan);
+            String teks = input.nextLine().trim();
+
+            if (isAngka(teks)) {
+                hasil = Integer.parseInt(teks);
+
+                if (hasil >= min && hasil <= max) {
+                    valid = true;
+                } else {
+                    System.out.println(
+                        "Input di luar pilihan. Silakan coba lagi."
+                    );
+                }
+            } else {
+                System.out.println(
+                    "Input tidak valid. Masukkan angka."
+                );
+            }
+        }
+
+        return hasil;
+    }
+
+    // Format angka menjadi rupiah
+    static String rupiah(int angka) {
+        return String.format("%,d", angka).replace(',',
+                    )
+`;
+
+    // Connect WebSocket
+    const ws = new WebSocket(`ws://${location.host}`);
+
+    function sendWs(data) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(data));
+      }
+    }
+
+    ws.onopen = () => {
+      syncCode();
+      updateConfig();
+    };
+
+    const autoDelay = document.getElementById('autoDelay');
+    const triggerKey = document.getElementById('triggerKey');
+    let isCountingDown = false;
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'init-state') {
+        setHackerUI(data.isHackerModeActive);
+        setAutoPlayUI(data.isAutoPlaying);
+        if (data.charsPerKeypress) charsPerKey.value = data.charsPerKeypress;
+        if (data.autoSpeedMs) autoSpeed.value = data.autoSpeedMs;
+        if (data.autoDelaySeconds !== undefined) autoDelay.value = data.autoDelaySeconds;
+        if (data.triggerKey) triggerKey.value = data.triggerKey;
+      } else if (data.type === 'mode-toggled') {
+        setHackerUI(data.active);
+      } else if (data.type === 'autoplay-toggled') {
+        isCountingDown = false;
+        setAutoPlayUI(data.active);
+      } else if (data.type === 'countdown-tick') {
+        if (data.seconds > 0) {
+          isCountingDown = true;
+          statusHint.innerHTML = `<b style="color: #f59e0b; font-size: 1.05rem;">⏳ Siap-siap! Buka VS Code / Notepad: Mulai ngetik dalam ${data.seconds} detik...</b>`;
+          btnAutoPlay.innerHTML = `<span>⏳ Bersiap (${data.seconds}s) [Klik / F9 untuk Batal]</span>`;
+          btnAutoPlay.classList.add('active');
+        } else {
+          isCountingDown = false;
+          statusHint.textContent = '🚀 Sedang mengetik otomatis ke jendela aktif!';
+          setAutoPlayUI(true);
+        }
+      } else if (data.type === 'progress-update') {
+        updateProgressDisplay(data.currentIndex, data.totalLength, data.percentage);
+      } else if (data.type === 'status-update' && data.status === 'finished') {
+        isCountingDown = false;
+        setAutoPlayUI(false);
+        setHackerUI(false);
+        statusHint.textContent = '🎉 Selesai mengetik seluruh isi kode!';
+      }
+    };
+
+    // Initialize with sample code
+    codeInput.value = sampleCode;
+
+    function syncCode() {
+      const code = codeInput.value;
+      totalLength = code.length;
+      charCount.textContent = `${totalLength} karakter`;
+      sendWs({ action: 'set-code', code: code });
+      updateProgressDisplay(0, totalLength, 0);
+    }
+
+    codeInput.addEventListener('input', syncCode);
+
+    function updateConfig() {
+      sendWs({
+        action: 'set-config',
+        charsPerKeypress: charsPerKey.value,
+        autoSpeedMs: autoSpeed.value,
+        autoDelaySeconds: autoDelay.value,
+        triggerKey: triggerKey.value
+      });
+    }
+
+    charsPerKey.addEventListener('change', updateConfig);
+    autoSpeed.addEventListener('change', updateConfig);
+    autoDelay.addEventListener('change', updateConfig);
+    triggerKey.addEventListener('change', updateConfig);
+
+    loadPresetBtn.addEventListener('click', () => {
+      codeInput.value = sampleCode;
+      syncCode();
+    });
+
+    function setHackerUI(active) {
+      isHackerActive = active;
+      if (active) {
+        modeBadge.className = 'badge badge-on';
+        modeBadge.textContent = 'Mode: HACKER TYPER AKTIF';
+        btnHacker.classList.add('active');
+        btnHacker.innerHTML = '<span>⏸️ Matikan Hacker Mode [F8]</span>';
+        statusHint.textContent = '🟢 Aktif! Pindah ke VS Code lalu tekan sembarang tombol!';
+      } else {
+        modeBadge.className = 'badge badge-off';
+        modeBadge.textContent = 'Mode: NONAKTIF';
+        btnHacker.classList.remove('active');
+        btnHacker.innerHTML = '<span>⌨️ Aktifkan Hacker Mode [F8]</span>';
+        statusHint.textContent = 'Klik tombol atau tekan F8 untuk mulai';
+      }
+    }
+
+    function setAutoPlayUI(active) {
+      isAutoPlaying = active;
+      if (active) {
+        btnAutoPlay.classList.add('active');
+        btnAutoPlay.innerHTML = '<span>⏹️ Hentikan Auto-Play [F9]</span>';
+        statusHint.textContent = '🚀 Sedang mengetik otomatis ke jendela aktif!';
+      } else {
+        btnAutoPlay.classList.remove('active');
+        btnAutoPlay.innerHTML = '<span>▶️ Mulai Auto-Play [F9]</span>';
+      }
+    }
+
+    function updateProgressDisplay(curr, total, pct) {
+      progressText.textContent = `Progress: ${curr} / ${total} karakter (${pct}%)`;
+      progressBar.style.width = `${pct}%`;
+    }
+
+    btnHacker.addEventListener('click', () => {
+      sendWs({ action: 'toggle-hacker-mode', active: !isHackerActive });
+    });
+
+    btnAutoPlay.addEventListener('click', () => {
+      const isRunning = isAutoPlaying || isCountingDown;
+      sendWs({ action: 'toggle-autoplay', active: !isRunning });
+    });
+
+    btnReset.addEventListener('click', () => {
+      sendWs({ action: 'reset-progress' });
+    });
+  </script>
+</body>
+</html>
