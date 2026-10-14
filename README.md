@@ -1,34 +1,40 @@
-# ⚡ Hacker Typer Simulator (VS Code & Visual Studio)
+# ⚡ Typing Simulator (VS Code & Visual Studio)
 
-Aplikasi desktop simulator mengetik kode secara realistis untuk presentasi, demo video, ngonten, atau gaya-gayaan ala hacker di **Visual Studio Code** maupun **Visual Studio**.
+Aplikasi desktop simulator mengetik kode secara realistis untuk presentasi, demo video tutorial, ngonten coding, atau gaya-gayaan ala hacker di **Visual Studio Code** (Desktop & Web), **Visual Studio**, maupun text editor lainnya.
 
 ---
 
 ## 🚀 Fitur Utama
-1. **Mode Hacker Typer (Live Typing)**:
-   - Cukup tekan sembarang tombol di keyboard (seperti ngetik ngasal), aplikasi akan otomatis mengetikkan baris kode asli karakter demi karakter secara sempurna di VS Code.
-2. **Mode Auto-Play**:
-   - Mengetik sendiri secara otomatis dengan interval kecepatan yang bisa diatur (ms).
-3. **Global Hotkeys**:
-   - Tetap bekerja meskipun jendela aplikasi sedang diminimize atau berada di belakang VS Code.
-   - **`F8`** : Mengaktifkan / Menonaktifkan mode Hacker Typer.
-   - **`F9`** : Memulai / Menjeda mode Auto-Play.
-   - **`F10`**: Reset progress ketikan kembali ke awal (karakter 0).
-4. **Kustomisasi Lengkap**:
-   - Bisa paste kode apa saja (JavaScript, Python, C++, HTML, dll).
-   - Pengaturan jumlah karakter per ketukan (default 3 karakter).
-   - Opsi *Always on Top* (jendela tetap melayang di atas).
+
+1. **Mode Auto-Play (Sekali Klik Berjalan Penuh)**:
+   - Cukup 1 kali klik tombol **`▶️ Mulai Auto-Play [F9]`**, aplikasi menghitung mundur (jeda 5 detik agar Anda sempat fokus ke VS Code), lalu otomatis mengetik terus-menerus baris demi baris sampai 100% selesai.
+   - Dilengkapi **Instant Stop**: Jika tombol di-klik lagi atau ditekan `F9`, pengetikan langsung berhenti seketika (0 milidetik).
+
+2. **Mode Hacker Typer (Live Manual Typing)**:
+   - Tekan **`F8`** untuk mengaktifkan.
+   - Kodingan hanya akan terketik ketika Anda menekan tombol pemicu khusus yang dipilih (seperti **Spasi**, **Tab**, **Panah Kanan**, dll), sehingga tidak akan salah ketik saat menyentuh tombol lain.
+
+3. **Anti-Tangga / Anti Double-Indent (Reset Kolom 0)**:
+   - Dilengkapi penanganan native `Shift + Tab` outdent saat Enter, menjamin kursor selalu mulai dari Kolom 0 pada setiap baris baru.
+   - Hasil ketikan **100% lurus, rapi, dan identik dengan kode aslinya** tanpa menjorok berlebihan meskipun kodenya ratusan baris.
+
+4. **Auto-Closing Bracket Cancellation**:
+   - Secara cerdas membatalkan kurung tutup otomatis dari editor (`}`, `)`, `]`) saat membuka blok di akhir baris, sehingga tidak meninggalkan sisa kurung penutup merah berlebih di akhir file.
+
+5. **Global Hotkeys**:
+   - Tetap bekerja meskipun jendela simulator sedang berada di latar belakang:
+     - **`F8`** : Toggle Hacker Typer Mode
+     - **`F9`** : Toggle Auto-Play (Mulai / Jeda Instan)
+     - **`F10`** : Reset Progress ke 0%
 
 ---
 
 ## 🛠️ Cara Menjalankan
 
 1. **Jalankan Aplikasi**:
-   - Cukup double-click file [`start.bat`](file:///e:/Vibecoding/auto%20typing/start.bat) 
-   - Atau lewat terminal: `npm start`
-2. **Langkah Penggunaan di VS Code**:
-   - Paste kode yang ingin kamu ketikkan ke dalam kotak input aplikasi (atau gunakan contoh bawaan).
-   - Buka file baru di **VS Code / Visual Studio** dan letakkan kursor di area editor.
-   - Tekan tombol **`F8`** di keyboard.
-   - Mulailah mengetik sembarang tombol di keyboard Anda! Baris kodingan akan tertulis rapi dan nyata.
-   - Tekan **`F8`** lagi kapan pun ingin berhenti.
+   - Cukup double-click file [`start.bat`](start.bat) (atau jalankan `npm start`).
+2. **Gunakan di VS Code**:
+   - Masukkan kode yang ingin Anda simulasikan (atau klik tombol **Muat Contoh Kode**).
+   - Buka **VS Code** dan buat file baru.
+   - Klik **`▶️ Mulai Auto-Play [F9]`**, lalu klik ke dalam editor VS Code dalam 5 detik.
+   - Kode akan otomatis terketik rapi dan presisi hingga selesai.
