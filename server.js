@@ -180,6 +180,8 @@ function stopAutoPlay() {
   // Instantly cancel any queued keystrokes in the OS pipe buffer!
   if (nativeSender) {
     try {
+      nativeSender.stdin.write('EXIT\n');
+      nativeSender.stdin.end();
       nativeSender.kill();
     } catch (e) {}
     nativeSender = null;

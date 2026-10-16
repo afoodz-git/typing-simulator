@@ -432,8 +432,78 @@ public class Main {
 
     // Format angka menjadi rupiah
     static String rupiah(int angka) {
-        return String.format("%,d", angka).replace(',',
-                    )
+        return String.format("%,d", angka).replace(',', '.');
+    }
+
+    // Menampilkan menu berdasarkan kategori
+    static void tampilkanMenu() {
+        System.out.println();
+
+        for (String kategori : kategoriList) {
+            System.out.println("=== " + kategori.toUpperCase() + " ===");
+
+            for (int i = 0; i < jumlahMenu; i++) {
+                if (daftarMenu[i].getKategori().equals(kategori)) {
+                    System.out.printf(
+                        "%2d. %-15s Rp %s%n",
+                        i + 1,
+                        daftarMenu[i].getNama(),
+                        rupiah(daftarMenu[i].getHarga())
+                    );
+                }
+            }
+        }
+    }
+
+    // Proses pemesanan pelanggan
+    static void prosesPesanan() {
+        int[] jumlahPesan = new int[KAPASITAS];
+        boolean adaPesanan = false;
+        boolean selesai = false;
+
+        tampilkanMenu();
+
+        while (!selesai) {
+            System.out.print(
+                "\nNomor menu (ketik 'selesai' untuk mengakhiri): "
+            );
+
+            String masukan = input.nextLine().trim();
+
+            if (masukan.equalsIgnoreCase("selesai")) {
+                if (adaPesanan) {
+                    selesai = true;
+                } else {
+                    System.out.println(
+                        "Anda belum memesan apa pun."
+                    );
+                }
+            } else if (isAngka(masukan)) {
+                int nomor = Integer.parseInt(masukan);
+
+                if (nomor >= 1 && nomor <= jumlahMenu) {
+                    int jumlah = bacaAngka("Jumlah: ", 1, 100);
+
+                    jumlahPesan[nomor - 1] += jumlah;
+                    adaPesanan = true;
+
+                    System.out.println(
+                        "Ditambahkan: " + jumlah + " x "
+                        + daftarMenu[nomor - 1].getNama()
+                    );
+                } else {
+                    System.out.println(
+                        "Nomor menu tidak ada. Silakan input kembali."
+                    );
+                }
+            } else {
+                System.out.println(
+                    "Input tidak valid. Silakan input kembali."
+                );
+            }
+        }
+    }
+}
 `;
 
     // Connect WebSocket

@@ -14,6 +14,7 @@ namespace HackerTyperSender {
         const uint KEYEVENTF_KEYUP = 0x0002;
 
         const ushort VK_RETURN = 0x0D;
+        const ushort VK_ESCAPE = 0x1B;
         const ushort VK_SHIFT = 0x10;
         const ushort VK_HOME = 0x24;
         const ushort VK_BACK = 0x08;
@@ -118,13 +119,18 @@ namespace HackerTyperSender {
         }
 
         static void SendEnter() {
+            // Dismiss any open IntelliSense / AutoComplete / Copilot popup so Enter strictly creates a new line
+            SendKey(VK_ESCAPE);
+            Thread.Sleep(10);
+
             SendKey(VK_RETURN);
             Thread.Sleep(15);
+
             // Safely reset any editor auto-indent back to column 0.
             // Shift+Tab only outdents whitespace and never deletes lines or moves cursor up.
             for (int k = 0; k < 12; k++) {
                 SendKeyCombo(VK_SHIFT, VK_TAB);
-                Thread.Sleep(1);
+                Thread.Sleep(2);
             }
             Thread.Sleep(10);
         }
